@@ -1,0 +1,25 @@
+.triangle-up {
+  height: 0;
+  width: 0;
+  border-top: 5em solid transparent;
+  border-right: 5em solid transparent;
+  border-bottom: 5em solid rgb(145, 236, 252);
+  border-left: 5em solid transparent;
+  background-image: url("../img/X-O-graffiti-wallpaper-for-iPhone.jpg");
+}
+
+.triangle-right {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4em 0 4em 8em;
+  border-color: transparent transparent transparent rgb(245, 149, 221);
+}
+
+.triangle-bottom-right {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8em 0 0 8em;
+  border-color: transparent transparent transparent rgb(151, 235, 158);
+}/*# sourceMappingURL=styles2.css.map */

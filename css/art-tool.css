@@ -1,0 +1,14 @@
+.ui-wrapper:hover {
+  background: #e1e1e1;
+  border: 1px solid #d0d0d0;
+}
+
+ui-wrapper:hover {
+  content: url("grafBackground.png");
+}
+
+.elements-menu {
+  position: absolute;
+  top: 400px;
+  left: 1500px;
+}/*# sourceMappingURL=art-tool.css.map */

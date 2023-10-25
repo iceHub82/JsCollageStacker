@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Art-Tool-Canvas</title>
+  <link rel="stylesheet" href="css/pages-canvas.css">
+  <link rel="stylesheet" href="css/art-tool-canvas.css">
+</head>
+<body>
+
+    <canvas id="canvas-page">
+
+    </canvas>
+
+    <div class="menu">
+      <p>Canvas Size</p>
+      <input type="radio" name="canvasSize" value="A5">
+      <label for="A5">A5</label><br>
+      <input type="radio" name="canvasSize" value="A4" checked>
+      <label for="css">A4</label><br>
+      <input type="radio" name="canvasSize" value="A3">
+      <label for="A3">A3</label>
+    </div>
+
+    <div class="menu">
+      <p>Canvas Layout</p>
+      <input type="radio" name="canvasLayout" value="portrait" checked>
+      <label for="Portrait">Portrait</label><br>
+      <input type="radio" name="canvasLayout" value="landscape">
+      <label for="Landscape">Landscape</label><br>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- <script src="js/fabric.min.js"></script> -->
+    
+    <script src="https://unpkg.com/fabric@latest/dist/fabric.js"></script>
+    
+    
+
+    <script>
+      var canvas = new fabric.Canvas('canvas-page');
+      canvas.setWidth(794);
+      canvas.setHeight(1123);
+
+      // create a rectangle object
+      var rect = new fabric.Rect({
+        left: 100,
+        top: 100,
+        fill: 'red',
+        width: 20,
+        height: 20
+      });
+
+      canvas.add(rect);
+
+      canvas.on('drop', function(event) {
+      //prevent the file to open in new tab
+      event.e.stopPropagation();
+      event.e.stopImmediatePropagation();
+      event.e.preventDefault();
+
+      // Use DataTransfer interface to access the file(s)
+      if(event.e.dataTransfer.files.length > 0){
+        var files = event.e.dataTransfer.files;
+          for (var i = 0, f; f = files[i]; i++) {
+            // Only process image files.
+            if (f.type.match('image.*')) {            
+              // Read the File objects in this FileList.
+              var reader = new FileReader();
+              // listener for the onload event
+              reader.onload = function(evt) {
+                  // put image on canvas
+                fabric.Image.fromURL(evt.target.result, function(obj) {
+                  obj.scaleToHeight(canvas.height);
+                  obj.set('strokeWidth',0);
+                  canvas.add(obj);       
+                });
+              };
+              // Read in the image file as a data URL.
+              reader.readAsDataURL(f);
+            }
+          }
+        }  
+      }); 
+
+
+
+    $('input[type=radio][name=canvasSize]').on('change', function() {
+      let layout = $('input[type=radio][name=canvasLayout]:checked').val();
+      setCanvasSizeAndLayout($(this).val(), layout)
+    });
+
+    $('input[type=radio][name=canvasLayout]').on('change', function() {
+      var size = $('input[type=radio][name=canvasSize]:checked').val();
+      setCanvasSizeAndLayout(size, $(this).val())
+    });
+
+    function setCanvasSizeAndLayout(size, layout){
+      switch (size) {
+        case 'A5':
+          if(layout == 'landscape'){
+            canvas.setWidth(794);
+            canvas.setHeight(559);
+          }
+          else{
+            canvas.setWidth(559);
+            canvas.setHeight(794);
+          }
+          break;
+        case 'A4':
+          if(layout == 'landscape'){
+            canvas.setWidth(1123);
+            canvas.setHeight(794);
+          }
+          else{
+            canvas.setWidth(794);
+            canvas.setHeight(1123);
+          }
+          break;
+        case 'A3':
+          if(layout == 'landscape'){
+            canvas.setWidth(1587);
+            canvas.setHeight(1123);
+          }
+          else{
+            canvas.setWidth(1123);
+            canvas.setHeight(1587);
+          }
+          break;
+      }
+    }
+
+    $('canvas').dblclick(function(){
+      canvas.remove(canvas.getActiveObject());
+    });
+
+    </script>
+</body>
+</html>

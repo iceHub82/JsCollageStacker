@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>js-art-tool</title>
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <link rel="stylesheet" href="css/jquery.contextmenu.min.css">
+  <link rel="stylesheet" href="css/art-tool.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+
+<body>
+
+  <div class="container-fluid p-2">
+    <div class="row">
+      <div class="col-1 border">
+        <div class="row">
+          <div class="col">
+            <div class="menu">
+              <p>Page Size</p>
+              <input type="radio" id="A5" name="pageSize" value="A5">
+              <label for="A5">A5</label><br>
+              <input type="radio" id="A4" name="pageSize" value="A4" checked>
+              <label for="css">A4</label><br>
+              <input type="radio" id="A3" name="pageSize" value="A3">
+              <label for="A3">A3</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="menu">
+              <p>Page Layout</p>
+              <input type="radio" id="Portrait" name="pageLayout" value="portrait" checked>
+              <label for="Portrait">Portrait</label><br>
+              <input type="radio" id="Landscape" name="pageLayout" value="landscape">
+              <label for="Landscape">Landscape</label><br>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p>Elements</p>
+            <ul id="element-list" style="list-style: none; padding-left: 0px;">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col border p-3">
+        <page id="page-wrapper" size="A4" layout="portrait">
+        </page>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.contextmenu.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/js-art-tool.js"></script>
+
+</body>
+</html>
