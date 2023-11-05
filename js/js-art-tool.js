@@ -1,7 +1,7 @@
 
 let elementCount = 0;
 let zIndexCount = 0;
-// let intervalIds = [];
+let breakTabLoop = false;
 
 $(function() {
 
@@ -81,6 +81,13 @@ $(function() {
               name: 'Bring to front',
               callback: function(itemKey, opt, e) {
                 zIndexCount++;
+                opt.$trigger[0].style.zIndex = zIndexCount;
+            }
+          },
+          'bringback': {
+              name: 'Bring back',
+              callback: function(itemKey, opt, e) {
+                zIndexCount--;
                 opt.$trigger[0].style.zIndex = zIndexCount;
             }
           },
@@ -189,13 +196,16 @@ $(function() {
   });
 });
 
-$('#page-wrapper').on({'dragover dragenter': function(e) {
+let pageWrapper = 1;
+
+$(document).on({'dragover dragenter': function(e) {
     e.preventDefault();
     e.stopPropagation();
 },
 'drop': function(e) {
   var dataTransfer =  e.originalEvent.dataTransfer;
   if( dataTransfer && dataTransfer.files.length) {
+    var pageId = $(this).attr('id');
     elementCount++;
     e.preventDefault();
     e.stopPropagation();
@@ -204,19 +214,21 @@ $('#page-wrapper').on({'dragover dragenter': function(e) {
       reader.onload = $.proxy(function(file, $fileList, event) {
         var img = file.type.match('image.*') ? `<img id='drop-el-${elementCount}' class='resize' src='${event.target.result}' />` : "";
         $fileList.append(img);
-      }, this, file, $("#page-wrapper"));
+      }, this, file, $(`#${pageId}`));
       reader.readAsDataURL(file);
       reader.onloadend = () => setElementOptionsAfterDrop()
     });
   }
 }
-});
+}, '.page-drag-handler');
 
 function setElementOptionsAfterDrop() {
 
   $('#element-list').append(`<li id='drop-el-${elementCount}' class='element-list-item'>drop-el-${elementCount}</li>`);
 
-  let wrapper = $('#page-wrapper');
+  let activeTabId = $('#tab-buttons').find('button.active').attr('id').substring(0,1);
+
+  let wrapper = $(`#page-wrapper-${activeTabId}`);
   let wrapperWidth = wrapper.width();
   let wrapperHeight = wrapper.height();
 
@@ -229,8 +241,16 @@ function setElementOptionsAfterDrop() {
     latestDroppedElement.width(aspectRatio.width).height(aspectRatio.height);
   }
 
-  $('.resize').resizable({containment: '#page-wrapper' });
-  $('.ui-wrapper').last().css({position:'absolute', top:'',left:''}).draggable({ containment: '#page-wrapper' });
+  // $(`img#drop-el-${elementCount}`).resizable({containment: `#page-wrapper-${activeTabId}` });
+  $(`img#drop-el-${elementCount}`).resizable();
+
+  let lastUiWrapper = $(`#page-wrapper-${activeTabId} .ui-wrapper`).last();
+  // lastUiWrapper.css({position:'absolute', top:'',left:''}).draggable({ containment: `#page-wrapper-${activeTabId}` });
+  lastUiWrapper.css({position:'absolute', top:'',left:''}).draggable();
+
+  lastUiWrapper.rotatable({
+    handleOffset: { top: 0, left: 0 }
+  });
 }
 
 $(document).on('mouseenter', '.element-list-item', function() {
@@ -268,9 +288,69 @@ $('input[type=radio][name=pageSize]').on('change', function() {
     }
   });
 
-  $(document).on('', function() {
+  function darkModeOn() {
+    return $('#darkmodeSwitch').prop('checked');
+  }
 
+  $('#addTabBtn').click(function() {
+    let tabButtons = $('#tab-buttons');
+    let tabBtnCount = tabButtons.children().length;
+    tabBtnCount++;
+    tabButtons.append(`<li class="nav-item"><button class="nav-link" id="${tabBtnCount}-tab" data-bs-toggle="tab" data-bs-target="#page-tab-${tabBtnCount}" type="button" tabindex="-1">${tabBtnCount}</button></li>`)
+    $('#tabsWrapper').append(`<div class="tab-pane fade" id="page-tab-${tabBtnCount}" tabindex="0"><page id="page-wrapper-${tabBtnCount}" class="page-drag-handler ${darkModeOn() ? 'dark-page' : ''}" size="A4" layout="portrait"></page></div>`)
   });
+
+  $('#startLoopBtn').click(function() {
+    loop();
+  });
+
+  $('#stopLoopBtn').click(function() {
+    breakTabLoop = true;
+  });
+
+  function loop() {
+    totalTabsCount = $("#tab-buttons").length;
+    for (let i = 1; i < 10; i++) {
+      if(breakTabLoop) {
+        break;
+      }
+      setTimeout(function timer() {
+        if(i === 9) {
+          loop();
+        }
+        $(`#${i}-tab`).trigger('click');
+      }, i * 100);
+    }
+  }
+
+  $('#darkmodeSwitch').change(function() {
+    $('body').toggleClass('dark-body');
+
+    if (darkModeOn()) {
+      document.querySelectorAll('page').forEach(el=>el.classList.add('dark-page'));
+    }
+    else {
+      document.querySelectorAll('page').forEach(el=>el.classList.remove('dark-page'));
+    }
+  });
+
+  $('#btnSave').click(function() {
+    // $.get('http://localhost:4000/', function(data, status){
+    //   // alert("Data: " + data + "\nStatus: " + status);
+
+    //   console.log(data);
+    // });
+
+    $.get({
+      // crossDomain: true,
+      // dataType: 'jsonp',
+      url: 'http://localhost:4000/',
+      success: function(jsondata){
+       console.log(jsondata) 
+      }
+   })
+  })
+
   /**
   * Conserve aspect ratio of the original region. Useful when shrinking/enlarging
   * images to fit into a certain area.
@@ -282,8 +362,6 @@ $('input[type=radio][name=pageSize]').on('change', function() {
   * @return {Object} { width, height }
   */
 function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-
     var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-
     return { width: srcWidth*ratio, height: srcHeight*ratio };
  }

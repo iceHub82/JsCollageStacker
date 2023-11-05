@@ -12,3 +12,31 @@ ui-wrapper:hover {
   top: 400px;
   left: 1500px;
 }
+
+.ui-rotatable-handle {
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  background-size: 100%;
+  bottom: inherit;
+  left: 0;
+  right: 0;
+  top: -21px;
+  margin: auto;
+  /* position: absolute; */
+}/*# sourceMappingURL=art-tool.css.map */
+
+.ui-wrapper:hover .ui-rotatable-handle {
+  position: relative;
+}
+
+// DarkMode
+.dark-body {
+  background-color: #222;
+  color: #e6e6e6;
+}
+
+.dark-page {
+  background-color: #6e6969;
+  color: #e6e6e6;
+}
