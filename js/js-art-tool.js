@@ -46,36 +46,6 @@ $(function() {
           var m = 'clickedx: ' + key;
           window.console && console.log(m) || alert(m); 
       },
-    //   items: {
-    //     "bringtofront": {"name": "Bring to front", "icon": "edit"},
-    //     "cut": {"name": "Cut", "icon": "cut"},
-    //     "sep1": "---------",
-    //     "quit": {"name": "Quit", "icon": "quit"},
-    //     "sep2": "---------",
-    //     "fold1": {
-    //         "name": "Sub group", 
-    //         "items": {
-    //             "fold1-key1": {"name": "Foo bar"},
-    //             "fold2": {
-    //                 "name": "Sub group 2", 
-    //                 "items": {
-    //                     "fold2-key1": {"name": "alpha"},
-    //                     "fold2-key2": {"name": "bravo"},
-    //                     "fold2-key3": {"name": "charlie"}
-    //                 }
-    //             },
-    //             "fold1-key3": {"name": "delta"}
-    //         }
-    //     },
-    //     "fold1a": {
-    //         "name": "Other group", 
-    //         "items": {
-    //             "fold1a-key1": {"name": "echo"},
-    //             "fold1a-key2": {"name": "foxtrot"},
-    //             "fold1a-key3": {"name": "golf"}
-    //         }
-    //     }
-    // }
       items: {
           'bringtofront': {
               name: 'Bring to front',
@@ -112,64 +82,45 @@ $(function() {
             "Effects": {
             "name": "Effects", 
             "items": {
-              "fold1-key1": {"name": "jQuery UI Effects",
-                callback: function(itemKey, opt, e) {
-                  let elementId = opt.$trigger[0].children[0].id;
-                  runEffect(elementId, 'pulsate');
-              }
-            },
+
               "fold2": {
                   "name": "jQueryUi Effects", 
-                  // "items": {
-                      // "fold2-key1": {"name": "Pulsate",
-                        'items': {
-                          'pulse-1': {
-                            name: "Select", 
-                            type: 'select', 
-                            options: {1: 'blind',2:'bounce',3:'clip',4:'drop',5:'explode',6:'fade',7:'fold',8:'highlight',9:'puff',10:'pulsate',11:'scale',12:'shake',13:'size',14:'slide',15:'transfer'}, 
-                            selected: 1
-                          },
-                          "pulse-2": { 
-                            name:'Loop',
-                            type:'checkbox',
-                            selected: false
-                          },
-                          "pulse-3": { 
-                            name:'Tempo',
-                            type:'text'
-                          },
-                          "pulse-4": { name: 'Run',
-                            callback: function(itemKey, opt, e) {
-                              let elementId = opt.$trigger[0].children[0].id;
-                              let effect = opt.inputs['pulse-1'].$input.children(':selected').text()
-                              let loop = opt.inputs['pulse-2'].$input.prop('checked');
-                              let duration = opt.inputs['pulse-3'].$input.val();
+                    'items': {
+                      'pulse-1': {
+                        name: "Select", 
+                        type: 'select', 
+                        options: {1: 'blind',2:'bounce',3:'clip',4:'drop',5:'explode',6:'fade',7:'fold',8:'highlight',9:'puff',10:'pulsate',11:'scale',12:'shake',13:'size',14:'slide',15:'transfer'}, 
+                        selected: 1
+                      },
+                      "pulse-2": { 
+                        name:'Loop',
+                        type:'checkbox',
+                        selected: false
+                      },
+                      "pulse-3": { 
+                        name:'Tempo',
+                        type:'text'
+                      },
+                      "pulse-4": { name: 'Run',
+                        callback: function(itemKey, opt, e) {
+                          let elementId = opt.$trigger[0].children[0].id;
+                          let effect = opt.inputs['pulse-1'].$input.children(':selected').text()
+                          let loop = opt.inputs['pulse-2'].$input.prop('checked');
+                          let duration = opt.inputs['pulse-3'].$input.val();
 
-                              if(loop) {
-                                let setIntervalId = setInterval(function() {runEffect(elementId, effect, parseInt(duration));}, duration);
-                                $(`img#${elementId}`).data('interval-id', setIntervalId);
-                              }
-                              else {
-                                runEffect(elementId, effect, parseInt(duration));
-                              }
-                            }
-                          },
+                          if(loop) {
+                            let setIntervalId = setInterval(function() {runEffect(elementId, effect, parseInt(duration));}, duration);
+                            $(`img#${elementId}`).data('interval-id', setIntervalId);
+                          }
+                          else {
+                            runEffect(elementId, effect, parseInt(duration));
+                          }
                         }
-                      // },
-                      // "fold2-key2": {"name": "bravo"},
-                      // "fold2-key3": {"name": "charlie"}
-                  // }
-              },
-              "fold1-key3": {"name": "delta"}
+                      },
+                    }
+              }
             }
           },
-          // 'inspect': {
-          //   name: 'Inspect',
-          //   callback: function(itemKey, opt, e) {
-          //     $.trigger({ type: 'keypress', which: '123'}); // 123 for F12
-          //   }
-          // },
-          // 'copy': {name: "Copy", icon: "copy"},
           'duplicate': {
             name: "Duplicate",
             callback: function(itemKey, opt, e) {
@@ -186,12 +137,6 @@ $(function() {
 
             }
           },
-          "paste": {name: "Paste", icon: "paste"},
-          
-          "sep1": "---------",
-          "quit": {name: "Quit", icon: function(){
-              return 'context-menu-icon context-menu-icon-quit';
-          }}
       }
   });
 });
@@ -333,23 +278,6 @@ $('input[type=radio][name=pageSize]').on('change', function() {
       document.querySelectorAll('page').forEach(el=>el.classList.remove('dark-page'));
     }
   });
-
-  $('#btnSave').click(function() {
-    // $.get('http://localhost:4000/', function(data, status){
-    //   // alert("Data: " + data + "\nStatus: " + status);
-
-    //   console.log(data);
-    // });
-
-    $.get({
-      // crossDomain: true,
-      // dataType: 'jsonp',
-      url: 'http://localhost:4000/',
-      success: function(jsondata){
-       console.log(jsondata) 
-      }
-   })
-  })
 
   /**
   * Conserve aspect ratio of the original region. Useful when shrinking/enlarging
