@@ -23,8 +23,6 @@ $(function() {
 
     // Run the effect
     $(`img#${elementId}`).effect(effect, options, duration);
-    // $(`img#${elementId}`).effect(effect, options, 500, callback );
-
   };
 
   // Callback function to bring a hidden box back
